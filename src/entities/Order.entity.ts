@@ -1,7 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Customer } from "./Customer.entity";
 import { OrderItem } from "./OrderItem.entity";
-import { IOrder } from "../interfaces/iOrder";
 
 @Entity()
 export class Order{
@@ -13,6 +12,8 @@ export class Order{
     totalAmount: number
     @ManyToOne(() => Customer, (customer) => customer.orders,{onDelete:'CASCADE'})
     customer: Customer
-    @OneToMany(()=>OrderItem,(orderItem)=>orderItem.order,{cascade:true})
+    @OneToMany(() => OrderItem,(orderItem)=>orderItem.order,{cascade:true})
     orderItems:OrderItem[]
+    @Column({default:false})
+    checkOut : boolean
 }

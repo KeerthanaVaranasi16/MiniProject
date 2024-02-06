@@ -7,10 +7,10 @@ import { Response } from "express";
 export class orderItemRoute{
 
     @Post('/createOrderItem')
-    async createOrderItem(@Body() orderItemData: { product_id: number; quantity: number; unitPrice: number },@Res() res: Response){
+    async createOrderItem(@Body() orderItemData: { product_id: number; quantity: number },@Res() res: Response){
         try {
-            const { product_id, quantity, unitPrice } = orderItemData;
-            const orderItem = await orderItemService.createOrderItem(product_id, quantity, unitPrice);
+            const { product_id, quantity } = orderItemData;
+            const orderItem = await orderItemService.createOrderItem(product_id, quantity);
             return orderItem
         } catch (error) {
             return res.status(500).json({ error: error.message });
@@ -63,11 +63,11 @@ export class orderItemRoute{
         }
     }
 
-    @Post('/addOrderItemsToOrders/:orderItem_id')
-    async addOrderItemstoOrders(@Param('orderItem_id') orderItem_id: number,@Body() body: any, @Res() res: Response){
+    @Post('/addOrderItemsToOrders')
+    async addOrderItemstoOrders(@Body() body: any, @Res() res: Response){
         try{
-            const {order_id, customer_id} = body
-            await orderItemService.addOrderItemToOrder(orderItem_id, order_id, customer_id)
+            const {order_id, customer_id, orderItem_ids} = body
+            await orderItemService.addOrderItemToOrder(order_id, customer_id, orderItem_ids)
             return res.status(200).json({message:"Added successfully"})
         }
         catch (error) {

@@ -59,13 +59,13 @@ var orderItemRoute = /** @class */ (function () {
     }
     orderItemRoute.prototype.createOrderItem = function (orderItemData, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var product_id, quantity, unitPrice, orderItem, error_1;
+            var product_id, quantity, orderItem, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        product_id = orderItemData.product_id, quantity = orderItemData.quantity, unitPrice = orderItemData.unitPrice;
-                        return [4 /*yield*/, orderItemService_1.default.createOrderItem(product_id, quantity, unitPrice)];
+                        product_id = orderItemData.product_id, quantity = orderItemData.quantity;
+                        return [4 /*yield*/, orderItemService_1.default.createOrderItem(product_id, quantity)];
                     case 1:
                         orderItem = _a.sent();
                         return [2 /*return*/, orderItem];
@@ -154,15 +154,15 @@ var orderItemRoute = /** @class */ (function () {
             });
         });
     };
-    orderItemRoute.prototype.addOrderItemstoOrders = function (orderItem_id, body, res) {
+    orderItemRoute.prototype.addOrderItemstoOrders = function (body, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var order_id, customer_id, error_6;
+            var order_id, customer_id, orderItem_ids, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        order_id = body.order_id, customer_id = body.customer_id;
-                        return [4 /*yield*/, orderItemService_1.default.addOrderItemToOrder(orderItem_id, order_id, customer_id)];
+                        order_id = body.order_id, customer_id = body.customer_id, orderItem_ids = body.orderItem_ids;
+                        return [4 /*yield*/, orderItemService_1.default.addOrderItemToOrder(order_id, customer_id, orderItem_ids)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, res.status(200).json({ message: "Added successfully" })];
@@ -220,12 +220,11 @@ var orderItemRoute = /** @class */ (function () {
         __metadata("design:returntype", Promise)
     ], orderItemRoute.prototype, "deleteOrderItem", null);
     __decorate([
-        (0, routing_controllers_1.Post)('/addOrderItemsToOrders/:orderItem_id'),
-        __param(0, (0, routing_controllers_1.Param)('orderItem_id')),
-        __param(1, (0, routing_controllers_1.Body)()),
-        __param(2, (0, routing_controllers_1.Res)()),
+        (0, routing_controllers_1.Post)('/addOrderItemsToOrders'),
+        __param(0, (0, routing_controllers_1.Body)()),
+        __param(1, (0, routing_controllers_1.Res)()),
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Number, Object, Object]),
+        __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", Promise)
     ], orderItemRoute.prototype, "addOrderItemstoOrders", null);
     orderItemRoute = __decorate([

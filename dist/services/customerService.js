@@ -66,7 +66,7 @@ var customerService = /** @class */ (function () {
                     case 0:
                         console.log("Getting all the users");
                         return [4 /*yield*/, this.customerRepo
-                                .createQueryBuilder("customer").leftJoinAndSelect("customer.orders", "orders")
+                                .createQueryBuilder("customer").leftJoinAndSelect("customer.orders", "orders", "orders.checkOut = :checkOut", { checkOut: true }).leftJoinAndSelect('orders.orderItems', 'orderItems')
                                 .orderBy("customer.customer_id", "ASC")
                                 .getMany()];
                     case 1:
@@ -84,7 +84,7 @@ var customerService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         console.log("Getting particular customer details");
-                        return [4 /*yield*/, this.customerRepo.findOne({ where: options, relations: ['orders'] })];
+                        return [4 /*yield*/, this.customerRepo.findOne({ where: options, relations: ['orders', 'orders.orderItems'] })];
                     case 1:
                         specific_customer = _a.sent();
                         if (!specific_customer) {

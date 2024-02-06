@@ -54,21 +54,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var routing_controllers_1 = require("routing-controllers");
 var supplierService_1 = __importDefault(require("../services/supplierService"));
 var customerService_1 = __importDefault(require("../services/customerService"));
+var additionalFeaturesService_1 = __importDefault(require("../services/additionalFeaturesService"));
 var additionalFeaturesRoute = /** @class */ (function () {
     function additionalFeaturesRoute() {
     }
-    additionalFeaturesRoute.prototype.deleteSupplier = function (supplier_id, res) {
+    additionalFeaturesRoute.prototype.creatingOrders = function (customer_id, products, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var deletedSupplierAccount, error_1;
+            var orders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, supplierService_1.default.deleteSupplier(supplier_id)];
+                        return [4 /*yield*/, additionalFeaturesService_1.default.creatingOrders(customer_id, products)];
                     case 1:
-                        deletedSupplierAccount = _a.sent();
-                        console.log(deletedSupplierAccount);
-                        return [2 /*return*/, res.status(200).json({ message: "Deleted successfully" })];
+                        orders = _a.sent();
+                        return [2 /*return*/, res.json(orders)
+                            // return res.status(200).json({message:"Created successfully"})
+                        ];
                     case 2:
                         error_1 = _a.sent();
                         if (error_1 instanceof Error) {
@@ -80,9 +82,59 @@ var additionalFeaturesRoute = /** @class */ (function () {
             });
         });
     };
+    additionalFeaturesRoute.prototype.getOrders = function (customer_id, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var numberOfOrders, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        console.log(customer_id);
+                        return [4 /*yield*/, additionalFeaturesService_1.default.getNumberOfOrders(customer_id)];
+                    case 1:
+                        numberOfOrders = _a.sent();
+                        console.log("Number of orders for customer ".concat(customer_id, ": ").concat(numberOfOrders));
+                        return [2 /*return*/, res.json(numberOfOrders)];
+                    case 2:
+                        error_2 = _a.sent();
+                        if (error_2 instanceof Error) {
+                            return [2 /*return*/, res.status(500).json({ error: error_2.message })];
+                        }
+                        else {
+                            return [2 /*return*/, res.status(500).json({ error: "An unexpected error occurred." })];
+                        }
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    additionalFeaturesRoute.prototype.deleteSupplier = function (supplier_id, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var deletedSupplierAccount, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, supplierService_1.default.deleteSupplier(supplier_id)];
+                    case 1:
+                        deletedSupplierAccount = _a.sent();
+                        console.log(deletedSupplierAccount);
+                        return [2 /*return*/, res.status(200).json({ message: "Deleted successfully" })];
+                    case 2:
+                        error_3 = _a.sent();
+                        if (error_3 instanceof Error) {
+                            return [2 /*return*/, res.status(500).json({ error: error_3.message })];
+                        }
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     additionalFeaturesRoute.prototype.deleteCustomer = function (customer_id, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var deletedCustomerAccount, error_2;
+            var deletedCustomerAccount, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -93,9 +145,9 @@ var additionalFeaturesRoute = /** @class */ (function () {
                         console.log(deletedCustomerAccount);
                         return [2 /*return*/, res.status(200).json({ message: "Deleted successfully" })];
                     case 2:
-                        error_2 = _a.sent();
-                        if (error_2 instanceof Error) {
-                            return [2 /*return*/, res.status(500).json({ error: error_2.message })];
+                        error_4 = _a.sent();
+                        if (error_4 instanceof Error) {
+                            return [2 /*return*/, res.status(500).json({ error: error_4.message })];
                         }
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -103,6 +155,23 @@ var additionalFeaturesRoute = /** @class */ (function () {
             });
         });
     };
+    __decorate([
+        (0, routing_controllers_1.Post)('/creatingOrders/:customer_id'),
+        __param(0, (0, routing_controllers_1.Param)('customer_id')),
+        __param(1, (0, routing_controllers_1.Body)()),
+        __param(2, (0, routing_controllers_1.Res)()),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Number, Array, Object]),
+        __metadata("design:returntype", Promise)
+    ], additionalFeaturesRoute.prototype, "creatingOrders", null);
+    __decorate([
+        (0, routing_controllers_1.Get)('/orders/:customer_id'),
+        __param(0, (0, routing_controllers_1.Param)('customer_id')),
+        __param(1, (0, routing_controllers_1.Res)()),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Number, Object]),
+        __metadata("design:returntype", Promise)
+    ], additionalFeaturesRoute.prototype, "getOrders", null);
     __decorate([
         (0, routing_controllers_1.Delete)('/deleteSupplierAccount/:supplier_id'),
         __param(0, (0, routing_controllers_1.Param)("supplier_id")),

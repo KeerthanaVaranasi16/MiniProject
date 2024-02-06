@@ -50,25 +50,9 @@ var orderItemService = /** @class */ (function () {
         this.productRepo = dataSource_1.default.getRepository(Product_entity_1.Product);
         this.orderRepo = dataSource_1.default.getRepository(Order_entity_1.Order);
     }
-    orderItemService.prototype.findOrderItem = function (orderItem_id) {
+    orderItemService.prototype.createOrderItem = function (product_id, quantity) {
         return __awaiter(this, void 0, void 0, function () {
-            var existingOrderItem;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.orderItemRepo.findOne({ where: { orderItem_id: orderItem_id } })];
-                    case 1:
-                        existingOrderItem = _a.sent();
-                        if (!existingOrderItem) {
-                            throw new Error("OrderItem with ".concat(orderItem_id, " not found"));
-                        }
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    orderItemService.prototype.createOrderItem = function (product_id, quantity, unitPrice) {
-        return __awaiter(this, void 0, void 0, function () {
-            var existingProduct, newOrderItem, savedOrderItem;
+            var existingProduct, unitPrice, newOrderItem, savedOrderItem;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.productRepo.findOne({ where: { product_id: product_id } })];
@@ -78,6 +62,7 @@ var orderItemService = /** @class */ (function () {
                             throw new Error("Product with ID ".concat(product_id, " not found"));
                         }
                         console.log("Creating new OrderItem");
+                        unitPrice = existingProduct.unitPrice;
                         newOrderItem = new OrderItem_entity_1.OrderItem();
                         newOrderItem.quantity = quantity;
                         newOrderItem.unitPrice = unitPrice;
@@ -91,9 +76,9 @@ var orderItemService = /** @class */ (function () {
             });
         });
     };
-    orderItemService.prototype.addOrderItemToOrder = function (orderItem_id, order_id, customer_id) {
+    orderItemService.prototype.addOrderItemToOrder = function (order_id, customer_id, orderItem_ids) {
         return __awaiter(this, void 0, void 0, function () {
-            var existingOrder, existingOrderItem, addedOrderItem;
+            var existingOrder, _i, orderItem_ids_1, orderItem_id, existingOrderItem, addedOrderItem;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.orderRepo.findOne({ where: { order_id: order_id } })];
@@ -104,8 +89,14 @@ var orderItemService = /** @class */ (function () {
                     case 2:
                         existingOrder = _a.sent();
                         _a.label = 3;
-                    case 3: return [4 /*yield*/, this.orderItemRepo.findOne({ where: { orderItem_id: orderItem_id } })];
+                    case 3:
+                        _i = 0, orderItem_ids_1 = orderItem_ids;
+                        _a.label = 4;
                     case 4:
+                        if (!(_i < orderItem_ids_1.length)) return [3 /*break*/, 7];
+                        orderItem_id = orderItem_ids_1[_i];
+                        return [4 /*yield*/, this.orderItemRepo.findOne({ where: { orderItem_id: orderItem_id } })];
+                    case 5:
                         existingOrderItem = _a.sent();
                         console.log("Existing orderItem ".concat(existingOrderItem));
                         if (!existingOrderItem) {
@@ -117,8 +108,12 @@ var orderItemService = /** @class */ (function () {
                         console.log("Adding the orderItem to order");
                         existingOrder.orderItems.push(existingOrderItem);
                         existingOrder.totalAmount += existingOrderItem.unitPrice * existingOrderItem.quantity;
-                        return [4 /*yield*/, this.orderRepo.save(existingOrder)];
-                    case 5:
+                        _a.label = 6;
+                    case 6:
+                        _i++;
+                        return [3 /*break*/, 4];
+                    case 7: return [4 /*yield*/, this.orderRepo.save(existingOrder)];
+                    case 8:
                         addedOrderItem = _a.sent();
                         console.log(addedOrderItem);
                         return [2 /*return*/];

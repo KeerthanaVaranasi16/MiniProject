@@ -9,24 +9,22 @@ class orderService{
     private orderRepo = dataSource.getRepository(Order)
     private customerRepo = dataSource.getRepository(Customer)
 
-    async createOrder(customer_id:number, orderItem ?:{quantity: number, unitPrice: number}[]){
+    async createOrder(customer_id:number, orderItem ?:OrderItem[]){
         const customer=await this.customerRepo.findOne({where:{customer_id}})
         if(!customer){
             throw new Error("Customer not found")
         }
-        // if(!orderDate || !totalAmout){
-        //     throw new Error(`Incomplete Details`)
-        // }
         console.log("Creating new order")
-        const order=new Order()
-        order.orderDate=new Date()
-        order.totalAmount=0
-        order.customer=customer
+        const order = new Order()
+        order.orderDate = new Date()
+        order.totalAmount = 0
+        order.customer = customer
         if(orderItem){
             order.orderItems = orderItem.map((orderItemData : any)=>{
                 const newOrderItem = new OrderItem()
                 newOrderItem.quantity = orderItemData.quantity
                 newOrderItem.unitPrice = orderItemData.unitPrice
+                order.totalAmount += newOrderItem.quantity * newOrderItem.unitPrice
                 return newOrderItem
             })
         }

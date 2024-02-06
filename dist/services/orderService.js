@@ -71,9 +71,6 @@ var orderService = /** @class */ (function () {
                         if (!customer) {
                             throw new Error("Customer not found");
                         }
-                        // if(!orderDate || !totalAmout){
-                        //     throw new Error(`Incomplete Details`)
-                        // }
                         console.log("Creating new order");
                         order = new Order_entity_1.Order();
                         order.orderDate = new Date();
@@ -84,6 +81,7 @@ var orderService = /** @class */ (function () {
                                 var newOrderItem = new OrderItem_entity_1.OrderItem();
                                 newOrderItem.quantity = orderItemData.quantity;
                                 newOrderItem.unitPrice = orderItemData.unitPrice;
+                                order.totalAmount += newOrderItem.quantity * newOrderItem.unitPrice;
                                 return newOrderItem;
                             });
                         }

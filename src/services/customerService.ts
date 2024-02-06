@@ -10,7 +10,7 @@ class customerService {
   async getAllCustomers() {
     console.log("Getting all the users");
     const customers=await this.customerRepo
-      .createQueryBuilder("customer").leftJoinAndSelect("customer.orders", "orders")
+      .createQueryBuilder("customer").leftJoinAndSelect("customer.orders", "orders","orders.checkOut = :checkOut", { checkOut: true }).leftJoinAndSelect('orders.orderItems','orderItems')
       .orderBy("customer.customer_id", "ASC")
       .getMany();
     console.log(customers)
@@ -19,7 +19,7 @@ class customerService {
 
   async getOneCustomer(options: any) {
     console.log("Getting particular customer details");
-    const specific_customer=await this.customerRepo.findOne({where:options,relations:['orders']})
+    const specific_customer=await this.customerRepo.findOne({where:options,relations:['orders','orders.orderItems']})
     if(!specific_customer){
       throw new Error("Customer not found")
     }else{

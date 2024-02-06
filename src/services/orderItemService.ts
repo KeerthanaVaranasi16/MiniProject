@@ -11,19 +11,13 @@ class orderItemService{
     private productRepo = dataSource.getRepository(Product)
     private orderRepo = dataSource.getRepository(Order)
 
-    async findOrderItem(orderItem_id:number){
-        const existingOrderItem = await this.orderItemRepo.findOne({where:{orderItem_id}})
-        if(!existingOrderItem){
-            throw new Error(`OrderItem with ${orderItem_id} not found`)
-        }
-    }
-
-    async createOrderItem( product_id: number, quantity: number, unitPrice: number){
+    async createOrderItem( product_id: number, quantity: number){
         const existingProduct = await this.productRepo.findOne({where:{product_id}})
         if(!existingProduct){
             throw new Error(`Product with ID ${product_id} not found`)
         }
         console.log("Creating new OrderItem")
+        const unitPrice = existingProduct.unitPrice
         const newOrderItem = new OrderItem()
         newOrderItem.quantity = quantity
         newOrderItem.unitPrice = unitPrice
@@ -33,22 +27,36 @@ class orderItemService{
         return newOrderItem
     }
 
-    async addOrderItemToOrder(orderItem_id: number, order_id: number, customer_id: number){
+    async addOrderItemToOrder(order_id: number, customer_id: number, orderItem_ids: number[]){
         let existingOrder: Order | undefined = await this.orderRepo.findOne({where:{order_id}})
         if (!existingOrder) {
             existingOrder = await orderService.createOrder(customer_id)
         }
-        const existingOrderItem = await this.orderItemRepo.findOne({where:{orderItem_id}})
-        console.log(`Existing orderItem ${existingOrderItem}`)
-        if(!existingOrderItem){
-            throw new Error(`OrderItem with ID ${orderItem_id} not found`)
+        // const existingOrderItem = await this.orderItemRepo.findOne({where:{orderItem_id}})
+        // console.log(`Existing orderItem ${existingOrderItem}`)
+        // if(!existingOrderItem){
+        //     throw new Error(`OrderItem with ID ${orderItem_id} not found`)
+        // }
+        // if (!existingOrder.orderItems) {
+        //     existingOrder.orderItems = [];
+        // }
+        // console.log(`Adding the orderItem to order`)
+        // existingOrder.orderItems.push(existingOrderItem);
+        // existingOrder.totalAmount += existingOrderItem.unitPrice * existingOrderItem.quantity;
+
+        for (const orderItem_id of orderItem_ids) {
+            const existingOrderItem = await this.orderItemRepo.findOne({ where: { orderItem_id } });
+            console.log(`Existing orderItem ${existingOrderItem}`);
+            if (!existingOrderItem) {
+                throw new Error(`OrderItem with ID ${orderItem_id} not found`);
+            }
+            if (!existingOrder.orderItems) {
+                existingOrder.orderItems = [];
+            }
+            console.log(`Adding the orderItem to order`);
+            existingOrder.orderItems.push(existingOrderItem);
+            existingOrder.totalAmount += existingOrderItem.unitPrice * existingOrderItem.quantity;
         }
-        if (!existingOrder.orderItems) {
-            existingOrder.orderItems = [];
-        }
-        console.log(`Adding the orderItem to order`)
-        existingOrder.orderItems.push(existingOrderItem);
-        existingOrder.totalAmount += existingOrderItem.unitPrice * existingOrderItem.quantity;
         const addedOrderItem = await this.orderRepo.save(existingOrder)
         console.log(addedOrderItem)
     }
