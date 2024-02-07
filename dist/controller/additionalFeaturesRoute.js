@@ -58,13 +58,16 @@ var additionalFeaturesService_1 = __importDefault(require("../services/additiona
 var additionalFeaturesRoute = /** @class */ (function () {
     function additionalFeaturesRoute() {
     }
-    additionalFeaturesRoute.prototype.creatingOrders = function (customer_id, products, res) {
+    additionalFeaturesRoute.prototype.creatingOrders = function (customer_id, body, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var orders, error_1;
+            var products, orders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
+                        console.log("products\n");
+                        products = body.products;
+                        console.log(products);
                         return [4 /*yield*/, additionalFeaturesService_1.default.creatingOrders(customer_id, products)];
                     case 1:
                         orders = _a.sent();
@@ -161,7 +164,7 @@ var additionalFeaturesRoute = /** @class */ (function () {
         __param(1, (0, routing_controllers_1.Body)()),
         __param(2, (0, routing_controllers_1.Res)()),
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Number, Array, Object]),
+        __metadata("design:paramtypes", [Number, Object, Object]),
         __metadata("design:returntype", Promise)
     ], additionalFeaturesRoute.prototype, "creatingOrders", null);
     __decorate([

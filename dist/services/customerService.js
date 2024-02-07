@@ -90,9 +90,9 @@ var customerService = /** @class */ (function () {
                         if (!specific_customer) {
                             throw new Error("Customer not found");
                         }
-                        else {
-                            console.log(specific_customer);
-                        }
+                        // console.log(specific_customer)
+                        specific_customer.orders = specific_customer.orders.filter(function (order) { return order.checkOut === true; });
+                        console.log(specific_customer);
                         return [2 /*return*/, specific_customer];
                 }
             });

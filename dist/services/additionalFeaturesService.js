@@ -43,6 +43,7 @@ var dataSource_1 = __importDefault(require("../DataSource/dataSource"));
 var Customer_entity_1 = require("../entities/Customer.entity");
 var Product_entity_1 = require("../entities/Product.entity");
 var orderItemService_1 = __importDefault(require("./orderItemService"));
+var orderService_1 = __importDefault(require("./orderService"));
 var additionalFeaturesService = /** @class */ (function () {
     function additionalFeaturesService() {
         this.customerRepo = dataSource_1.default.getRepository(Customer_entity_1.Customer);
@@ -73,35 +74,37 @@ var additionalFeaturesService = /** @class */ (function () {
     };
     additionalFeaturesService.prototype.creatingOrders = function (customer_id, products) {
         return __awaiter(this, void 0, void 0, function () {
-            var customer, orderItemsData, index, index, productName, quantity, product, product_id, createdOrderItem;
+            var customer, orderItemsData, unavailableProducts, index, productName, quantity, product, product_id, createdOrderItem, createdOrder, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.customerRepo.findOne({ where: { customer_id: customer_id } })];
+                    case 0:
+                        _a.trys.push([0, 8, , 9]);
+                        return [4 /*yield*/, this.customerRepo.findOne({ where: { customer_id: customer_id } })];
                     case 1:
                         customer = _a.sent();
                         if (!customer) {
                             throw new Error("Customer with ID ".concat(customer_id, " not found"));
                         }
                         orderItemsData = [];
-                        // console.log(products)
-                        for (index = 0; index < products.length; index++) {
-                            console.log("Hello");
-                        }
-                        console.log("hi");
+                        unavailableProducts = [];
+                        console.log(products, typeof (products));
                         index = 0;
                         _a.label = 2;
                     case 2:
                         if (!(index < products.length)) return [3 /*break*/, 6];
-                        console.log(index);
                         productName = products[index].productName;
                         quantity = products[index].quantity;
-                        console.log(productName);
                         return [4 /*yield*/, this.productRepo.findOne({ where: { productName: productName } })];
                     case 3:
                         product = _a.sent();
                         console.log(product);
                         if (!product) {
                             throw new Error("Product with name ".concat(productName, " not found"));
+                        }
+                        if (!product || !product.isAvailable) {
+                            console.log("Product with name ".concat(productName, " is not available"));
+                            unavailableProducts.push(productName);
+                            return [3 /*break*/, 5];
                         }
                         product_id = product.product_id;
                         console.log("ProductId is ".concat(product_id));
@@ -114,7 +117,19 @@ var additionalFeaturesService = /** @class */ (function () {
                     case 5:
                         index++;
                         return [3 /*break*/, 2];
-                    case 6: return [2 /*return*/];
+                    case 6:
+                        if (unavailableProducts.length === products.length) {
+                            throw new Error("None of the requested products are available");
+                        }
+                        return [4 /*yield*/, orderService_1.default.createOrder(customer_id, orderItemsData)];
+                    case 7:
+                        createdOrder = _a.sent();
+                        console.log(createdOrder);
+                        return [2 /*return*/, createdOrder];
+                    case 8:
+                        error_1 = _a.sent();
+                        throw error_1;
+                    case 9: return [2 /*return*/];
                 }
             });
         });

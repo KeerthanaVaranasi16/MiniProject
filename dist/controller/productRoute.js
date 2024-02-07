@@ -135,7 +135,7 @@ var productRoute = /** @class */ (function () {
                         return [4 /*yield*/, productService_1.default.updateProduct(product_id, updateData)];
                     case 1:
                         updatedProduct = _a.sent();
-                        return [2 /*return*/, res.status(200).json({ message: "Deleted successfully" })];
+                        return [2 /*return*/, res.status(200).json({ message: "Updated successfully" })];
                     case 2:
                         error_4 = _a.sent();
                         if (error_4 instanceof Error) {

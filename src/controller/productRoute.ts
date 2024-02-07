@@ -54,7 +54,7 @@ export class productRoute {
   async updateProduct(@Param("product_id") product_id: number,@Body() updateData: any, @Res() res: Response){
     try{
         const updatedProduct = await productService.updateProduct(product_id,updateData)
-        return res.status(200).json({message:"Deleted successfully"})
+        return res.status(200).json({message:"Updated successfully"})
     }
     catch(error){
         if (error instanceof Error) {

@@ -22,9 +22,10 @@ class customerService {
     const specific_customer=await this.customerRepo.findOne({where:options,relations:['orders','orders.orderItems']})
     if(!specific_customer){
       throw new Error("Customer not found")
-    }else{
-      console.log(specific_customer)
     }
+      // console.log(specific_customer)
+    specific_customer.orders = specific_customer.orders.filter(order => order.checkOut === true);
+    console.log(specific_customer)
     return specific_customer
   }
 

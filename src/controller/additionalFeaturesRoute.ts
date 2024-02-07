@@ -9,8 +9,12 @@ import additionalFeaturesService from "../services/additionalFeaturesService";
 class additionalFeaturesRoute{
 
     @Post('/creatingOrders/:customer_id')
-    async creatingOrders(@Param('customer_id') customer_id: number, @Body() products: { productName: string; quantity: number }[], @Res() res:Response){
+    async creatingOrders(@Param('customer_id') customer_id: number, @Body() body:any, @Res() res:Response){
         try{
+            console.log("products\n")
+            // console.log(products)
+            let products = body.products
+            console.log(products)
             const orders = await additionalFeaturesService.creatingOrders(customer_id,products)
             return res.json(orders)
             // return res.status(200).json({message:"Created successfully"})

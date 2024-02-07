@@ -26,27 +26,27 @@ class additionalFeaturesService{
         return numberOfOrders;
     }
 
-    async creatingOrders(customer_id: number, products: { productName: string; quantity: number }[]) {
+    async creatingOrders(customer_id: number, products: any) {
+      try{
       const customer = await this.customerRepo.findOne({where:{customer_id}});
       if (!customer) {
         throw new Error(`Customer with ID ${customer_id} not found`);
       }
-      // console.log(customer)
       const orderItemsData = [];
-      // console.log(products)
-      for(let index=0;index<products.length;index++){
-        console.log("Hello")
-      }
-      console.log("hi")
-      for (let index=0;index<products.length;index++) {
-        console.log(index)
+      const unavailableProducts = [];
+      console.log(products,typeof(products))
+      for (let index = 0; index < products.length; index++) {
         let productName = products[index].productName
         let quantity = products[index].quantity
-        console.log(productName)
         const product = await this.productRepo.findOne({ where: { productName }});
         console.log(product);
         if (!product) {
             throw new Error(`Product with name ${productName} not found`);
+        }
+        if (!product || !product.isAvailable) {
+          console.log(`Product with name ${productName} is not available`);
+          unavailableProducts.push(productName);
+          continue;
         }
         const product_id = product.product_id;
         console.log(`ProductId is ${product_id}`);
@@ -54,10 +54,17 @@ class additionalFeaturesService{
         console.log(createdOrderItem);
         orderItemsData.push(createdOrderItem);
       }
+      if (unavailableProducts.length === products.length) {
+        throw new Error(`None of the requested products are available`);
+      }
+  
       const createdOrder = await orderService.createOrder(customer_id, orderItemsData);
       console.log(createdOrder);
       return createdOrder;
-      // console.log(orderItemsData)
+    }
+    catch(error){
+      throw error
+    }
   } 
 }
 export default new additionalFeaturesService

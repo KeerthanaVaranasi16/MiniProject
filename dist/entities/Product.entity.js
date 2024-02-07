@@ -44,6 +44,10 @@ var Product = /** @class */ (function () {
         (0, typeorm_1.OneToMany)(function (type) { return OrderItem_entity_1.OrderItem; }, function (orderItem) { return orderItem.product; }, { cascade: true }),
         __metadata("design:type", Array)
     ], Product.prototype, "orderItems", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ default: true }),
+        __metadata("design:type", Boolean)
+    ], Product.prototype, "isAvailable", void 0);
     Product = __decorate([
         (0, typeorm_1.Entity)()
     ], Product);

@@ -18,4 +18,6 @@ export class Product{
     supplier: Supplier;
     @OneToMany(type => OrderItem, orderItem => orderItem.product ,{cascade:true})
     orderItems: OrderItem[];
+    @Column({default:true})
+    isAvailable:boolean
 }
